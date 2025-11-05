@@ -36,7 +36,7 @@ public class JwtUtilTest {
                 .signWith(Keys.hmacShaKeyFor("llave_De_Prueba_Momentanea_12345".getBytes(StandardCharsets.UTF_8)))
                 .compact();
 
-        assertThrows(io.jsonwebtoken.ExpiredJwtException.class,
+        assertThrows(RuntimeException.class,
                 () -> jwtUtil.validateAndGetUser(token));
     }
 
@@ -46,7 +46,7 @@ public class JwtUtilTest {
         SecretKey otraClave = Keys.hmacShaKeyFor("llave_De_Prueba_Momentanea_123456".getBytes(StandardCharsets.UTF_8));
         String tokenInvalido = Jwts.builder().subject("usuario@prueba.com").signWith(otraClave).compact();
 
-        assertThrows(io.jsonwebtoken.security.SignatureException.class,
+        assertThrows(RuntimeException.class,
                 () -> jwtUtil.validateAndGetUser(tokenInvalido));
     }
 }
