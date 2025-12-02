@@ -7,8 +7,21 @@ import java.time.LocalDateTime;
 import java.net.URI;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Clase de utilidad para generar documentos de Microsoft Word (.docx)
+ * con formatos predefinidos para correos de bienvenida y recuperación de contraseña,
+ * utilizando la librería Apache POI XWPF.
+ */
 public class WordGenerator {
 
+    /**
+     * Genera un documento Word con el contenido de bienvenida para un nuevo usuario.
+     * El documento incluye el logo de la cafetería, un mensaje de bienvenida personalizado
+     * con el email del usuario y la fecha de registro.
+     *
+     * @param email La dirección de correo electrónico del usuario para personalizar el saludo.
+     * @return Un objeto File que representa el archivo .docx temporal generado.
+     */
     public static File generarPdfBienvenida(String email) throws IOException {
         File pdfFile = File.createTempFile("Bienvenida_", ".docx");
 
@@ -87,6 +100,14 @@ public class WordGenerator {
         return pdfFile;
     }
 
+    /**
+     * Genera un documento Word con el contenido de recuperación de contraseña para un usuario.
+     * El documento incluye el logo de la cafetería, el email del usuario y el token de recuperación generado.
+     *
+     * @param email La dirección de correo electrónico del usuario.
+     * @param token El token único generado para la recuperación de contraseña.
+     * @return Un objeto File que representa el archivo .docx temporal generado.
+     */
     public static File generarPdfRecuperacion(String email, String token) throws IOException {
         File pdfFile = File.createTempFile("Recuperacion_", ".docx");
 

@@ -19,6 +19,10 @@ import com.cursoIntegrador.lePettiteCoffe.Repository.PurchaseRepository;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Servicio para la gestión de compras (Purchase).
+ * Proporciona métodos para guardar nuevas compras y recuperar el historial de compras de un usuario.
+ */
 @Service
 @RequiredArgsConstructor
 public class PurchaseService {
@@ -32,6 +36,15 @@ public class PurchaseService {
     @Autowired
     private ProductRepository productRepository;
 
+    /**
+     * Guarda una nueva compra en la base de datos.
+     * Crea la entidad Purchase a partir del DTO, asocia los detalles de los productos
+     * y guarda la compra completa.
+     *
+     * @param userDetails Los detalles del usuario autenticado que realiza la compra.
+     * @param purchaseDTO El DTO con la información de la compra y la lista de productos comprados.
+     * @return El mismo DTO de solicitud de compra que fue procesado.
+     */
     public PurchaseRequestDTO savePurchase(CustomUserDetails userDetails, PurchaseRequestDTO purchaseDTO) {
 
         Cuenta cuenta = accountRepository.findByEmail(userDetails.getUsername());
@@ -64,6 +77,13 @@ public class PurchaseService {
         return purchaseDTO;
     }
 
+    /**
+     * Recupera el historial de compras de un usuario autenticado.
+     * Busca todas las compras realizadas por el ID de la cuenta del usuario y las convierte a DTOs de historial.
+     *
+     * @param userDetails Los detalles del usuario autenticado cuya historia de compras se desea recuperar.
+     * @return Una lista de objetos PurhcaseHistoryDTO que representan el historial de compras.
+     */
     public List<PurhcaseHistoryDTO> getHistory(CustomUserDetails userDetails) {
 
         List<Purchase> purchases = purchaseRepository.findAllByCuentaIdcuenta(userDetails.getCuenta().getIdcuenta());

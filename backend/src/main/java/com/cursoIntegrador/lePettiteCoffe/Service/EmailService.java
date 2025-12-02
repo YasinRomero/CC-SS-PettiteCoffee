@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.cursoIntegrador.lePettiteCoffe.Util.WordGenerator;
 
+/**
+ * Servicio encargado del envío de correos electrónicos.
+ * Utiliza la librería Apache Commons Email para enviar mensajes con o sin adjuntos,
+ * como tokens de recuperación y correos de bienvenida.
+ */
 @Service
 @PropertySource("classpath:secret-credentials.properties")
 public class EmailService {
@@ -22,6 +27,11 @@ public class EmailService {
     @Value("${email.password}")
     private String PASSWORD_EMISOR;
 
+    /**
+     * Configura los parámetros básicos del objeto MultiPartEmail (host, puerto, autenticación).
+     *
+     * @return Un objeto MultiPartEmail configurado y listo para ser utilizado.
+     */
     private MultiPartEmail configurarEmail() throws EmailException {
         MultiPartEmail email = new MultiPartEmail();
         email.setHostName("smtp.gmail.com");
@@ -32,6 +42,13 @@ public class EmailService {
         return email;
     }
 
+    /**
+     * Envía un correo electrónico que contiene un token de recuperación de contraseña.
+     * Adjunta un documento generado automáticamente con los detalles de recuperación.
+     *
+     * @param destinatario La dirección de correo electrónico a la que se enviará el token.
+     * @param token El token de recuperación de contraseña.
+     */
     public void enviarTokenDeRecuperacion(String destinatario, String token) throws EmailException {
         File pdf;
 
@@ -60,6 +77,12 @@ public class EmailService {
         pdf.deleteOnExit();
     }
 
+    /**
+     * Envía un correo electrónico de bienvenida a un nuevo usuario registrado.
+     * Adjunta un documento generado automáticamente como carta de bienvenida.
+     *
+     * @param destinatario La dirección de correo electrónico del nuevo usuario.
+     */
     public void enviarCorreoBienvenida(String destinatario) throws EmailException {
         File pdf;
 

@@ -8,9 +8,24 @@ import org.springframework.stereotype.Service;
 
 import com.cursoIntegrador.lePettiteCoffe.Util.PdfGenerator;
 
+/**
+ * Servicio encargado de la generación de reportes en formato PDF.
+ * Utiliza Reflexión para leer los campos de los objetos en una lista
+ * y construir una tabla HTML que luego se convierte a PDF.
+ */
 @Service
 public class ReportService {
 
+    /**
+     * Genera un reporte en formato PDF a partir de una lista de objetos.
+     * Utiliza Reflexión para determinar las cabeceras de la tabla (nombres de campos)
+     * y los datos (valores de los campos) de los objetos, construyendo un HTML
+     * que luego es transformado a PDF.
+     *
+     * @param lista Una lista de objetos de cualquier tipo que se utilizarán para generar las filas del reporte.
+     * @param reportName El nombre del reporte, utilizado en el encabezado del documento.
+     * @return Un array de bytes que representa el contenido del archivo PDF generado.
+     */
     public byte[] generateExampleReport(List<?> lista, String reportName) throws IllegalAccessException {
 
         List<String> cabeceras = new ArrayList<>();

@@ -18,6 +18,11 @@ import com.google.genai.types.Part;
 
 import jakarta.annotation.PostConstruct;
 
+/**
+ * Servicio para la integración con la API de Gemini (IA de Google).
+ * Gestiona dos sesiones de chat distintas ("recommendations" y "support") para asistir a los usuarios
+ * con información sobre productos y soporte de la cafetería "LePettiteCoffe".
+ */
 @Service
 @PropertySource("classpath:secret-credentials.properties")
 public class GeminiService {
@@ -39,6 +44,10 @@ public class GeminiService {
     @Autowired
     ProductService productService;
 
+    /**
+     * Inicializa el cliente de Gemini y las configuraciones de las sesiones de chat.
+     * Recupera la lista de productos para configurar el asistente de recomendaciones.
+     */
     @PostConstruct
     public void init() {
         this.client = Client.builder().apiKey(APIKey).build();
@@ -85,6 +94,13 @@ public class GeminiService {
         this.chatSessionSup = client.chats.create(modelId, supConfig);
     }
 
+    /**
+     * Envía un prompt a la sesión de chat de Gemini apropiada según el modo especificado.
+     *
+     * @param prompt El mensaje de texto que se enviará al modelo de IA.
+     * @param mode El modo de la conversación, que puede ser "recommendations" o cualquier otro valor para "support".
+     * @return La respuesta de texto generada por el modelo de IA.
+     */
     public String lePettitePromptCompuesto(String prompt, String mode) {
 
         GenerateContentResponse response;
