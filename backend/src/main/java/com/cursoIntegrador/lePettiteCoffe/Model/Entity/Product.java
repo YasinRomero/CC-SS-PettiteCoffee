@@ -16,6 +16,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Product {
 
+    /**
+     * Entidad que representa un producto disponible en el catálogo.
+     * <p>
+     * Contiene información de identificación, precios, stock y fecha de vencimiento.
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idproducto;

@@ -25,6 +25,10 @@ import org.springframework.http.HttpHeaders;
 @ExtendWith(MockitoExtension.class)
 public class ProductControllerTest {
 
+    /**
+     * Pruebas unitarias para ProductController (endpoints de productos).
+     */
+
     @Mock
     private ProductService productService;
 
@@ -44,6 +48,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que getAllProductsWithImage devuelve OK y mapea correctamente la URL de imagen cuando existen productos.
+     */
     void testGetAllProductsWithImage() {
         when(productService.getAllProducts()).thenReturn(List.of(productoEjemplo));
         when(request.getScheme()).thenReturn("http");
@@ -59,6 +66,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que getAllProductsWithImage devuelve NO_CONTENT cuando no hay productos.
+     */
     void testGetAllProductsWithImage_Empty() {
         when(productService.getAllProducts()).thenReturn(List.of());
 
@@ -69,6 +79,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que getAllProductsWithImage devuelve INTERNAL_SERVER_ERROR cuando el servicio lanza una excepción.
+     */
     void testGetAllProductsWithImage_Exception() {
         when(productService.getAllProducts()).thenThrow(new RuntimeException("boom"));
 
@@ -79,6 +92,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que agregarProducto devuelve OK y el producto creado cuando el servicio tiene éxito.
+     */
     void testAgregarProducto_Success() {
         Product p = new Product();
         p.setNombre("Cafe Nuevo");
@@ -93,6 +109,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que agregarProducto devuelve INTERNAL_SERVER_ERROR y el mensaje esperado cuando el servicio falla.
+     */
     void testAgregarProducto_Exception() {
         Product p = new Product();
         p.setNombre("Cafe Error");
@@ -107,6 +126,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que eliminarProducto devuelve OK cuando la eliminación es correcta.
+     */
     void testEliminarProducto_Success() {
         doNothing().when(productService).eliminarProductoPorId(1);
 
@@ -117,6 +139,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que eliminarProducto devuelve NOT_FOUND cuando el producto no existe.
+     */
     void testEliminarProducto_NotFound() {
         doThrow(new IllegalArgumentException("No existe")).when(productService).eliminarProductoPorId(999);
 
@@ -128,6 +153,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que actualizarParcial devuelve OK y el producto actualizado cuando la modificación tiene éxito.
+     */
     void testActualizarParcial_Success() {
         Product input = new Product();
         input.setNombre("Old");
@@ -144,6 +172,9 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que actualizarParcial devuelve INTERNAL_SERVER_ERROR ante excepciones inesperadas.
+     */
     void testActualizarParcial_Exception() {
         Product input = new Product();
         when(productService.modificarProducto(1, input)).thenThrow(new RuntimeException("err"));
@@ -156,6 +187,11 @@ public class ProductControllerTest {
     }
 
     @Test
+    /**
+    * Verifica que getReportProduct devuelve los bytes del PDF y la cabecera content-disposition cuando está disponible.
+     *
+    * @throws Exception si la generación del reporte falla durante la preparación del test
+     */
     void testGetReport_Success() throws Exception {
         byte[] pdf = new byte[] {1,2,3};
         when(productService.getReport()).thenReturn(pdf);

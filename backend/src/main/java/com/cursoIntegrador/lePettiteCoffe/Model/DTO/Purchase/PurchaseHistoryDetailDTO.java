@@ -8,6 +8,10 @@ import lombok.Data;
 
 @Data
 public class PurchaseHistoryDetailDTO {
+
+    /**
+     * DTO que representa una línea de detalle dentro del historial de compra.
+     */
     private Integer productId;
     private String productName;
     private Integer quantity;
@@ -15,6 +19,11 @@ public class PurchaseHistoryDetailDTO {
     private String instructions;
 
     public PurchaseHistoryDetailDTO(PurchaseDetails purchaseDetail) {
+        /**
+         * Construye el DTO de detalle a partir de PurchaseDetails.
+         *
+         * @param purchaseDetail entidad PurchaseDetails con la información de la línea
+         */
         this.productId = purchaseDetail.getProduct().getIdproducto();
         this.productName = purchaseDetail.getProduct().getNombre();
         this.quantity = purchaseDetail.getQuantity();

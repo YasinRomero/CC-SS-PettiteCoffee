@@ -9,6 +9,10 @@ import lombok.Data;
 @Data
 public class NotificationDTO {
 
+    /**
+     * DTO para transferir notificaciones al cliente o capas superiores.
+     */
+
     private Long idNotificaciones;
 
     private String asunto;
@@ -18,6 +22,11 @@ public class NotificationDTO {
     private LocalDateTime fechaHoraEnvio;
 
     public NotificationDTO(Notification notification) {
+        /**
+         * Crea un NotificationDTO a partir de la entidad Notification.
+         *
+         * @param notification entidad Notification que contiene los datos originales
+         */
         this.idNotificaciones = notification.getIdNotificaciones();
         this.asunto = notification.getAsunto();
         this.descripcion = notification.getDescripcion();

@@ -17,6 +17,11 @@ import com.cursoIntegrador.lePettiteCoffe.Service.DAO.NotificationService;
 
 @RequestMapping("/notificaciones")
 @RestController
+/**
+ * Controlador para gestionar las notificaciones de usuario.
+ * <p>
+ * Proporciona endpoint para listar las notificaciones del usuario autenticado.
+ */
 public class NotificationController {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationController.class);
@@ -26,6 +31,13 @@ public class NotificationController {
 
     @GetMapping("/listar")
     @PreAuthorize("isAuthenticated()")
+    /**
+     * Lista las notificaciones del usuario autenticado.
+     *
+     * @param principal información del usuario autenticado (principal)
+     * @return ResponseEntity con la lista de NotificationDTO, ResponseEntity.noContent()
+     *         (204) si no hay notificaciones, o ResponseEntity 500 en caso de error
+     */
     public ResponseEntity<?> listarNotificaciones(Principal principal) {
         try {
             String email = principal.getName();

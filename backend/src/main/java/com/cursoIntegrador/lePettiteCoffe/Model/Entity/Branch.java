@@ -14,6 +14,12 @@ import lombok.NoArgsConstructor;
 @Table(name = "sucursal")
 public class Branch {
 
+    /**
+     * Entidad que representa una sucursal física o punto de venta.
+     * <p>
+     * Contiene identificador, nombre y dirección de la sucursal.
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer Idsucursal;

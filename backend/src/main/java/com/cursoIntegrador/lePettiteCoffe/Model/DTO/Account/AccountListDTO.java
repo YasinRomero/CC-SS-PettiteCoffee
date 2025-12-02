@@ -10,6 +10,12 @@ import lombok.Data;
 @Data
 public class AccountListDTO {
 
+    /**
+     * DTO para listar información pública de una cuenta (sin credenciales).
+     * <p>
+     * Incluye identificador, email, rol, estado y datos básicos de perfil.
+     */
+
     private Integer idcuenta;
     private String email;
     private String rol;
@@ -22,6 +28,11 @@ public class AccountListDTO {
     private String telefono;
 
     public AccountListDTO(Cuenta cuenta) {
+        /**
+         * Crea un AccountListDTO mapeando desde la entidad Cuenta.
+         *
+         * @param cuenta entidad Cuenta desde la cual se extraen los campos para la lista
+         */
         this.idcuenta = cuenta.getIdcuenta();
         this.email = cuenta.getEmail();
         this.rol = cuenta.getRol();

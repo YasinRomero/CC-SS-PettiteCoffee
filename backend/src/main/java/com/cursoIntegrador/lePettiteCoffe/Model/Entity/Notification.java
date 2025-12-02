@@ -24,6 +24,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class Notification {
 
+    /**
+     * Entidad que representa una notificación en el sistema dirigida a un usuario.
+     * <p>
+     * Incluye asunto, descripción, fecha de envío y la cuenta a la que pertenece.
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idnotificaciones")

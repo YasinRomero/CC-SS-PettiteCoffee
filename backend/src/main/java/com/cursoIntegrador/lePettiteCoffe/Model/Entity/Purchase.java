@@ -24,6 +24,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Purchase {
 
+    /**
+     * Entidad que representa una compra realizada por una cuenta.
+     * <p>
+     * Incluye referencia a la cuenta, detalles de la compra, datos de entrega y total.
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idpurchase;
