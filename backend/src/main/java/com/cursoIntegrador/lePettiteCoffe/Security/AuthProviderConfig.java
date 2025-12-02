@@ -1,35 +1,29 @@
-package com.cursoIntegrador.lePettiteCoffe.Security;
+package com.cursoIntegrador.lePettiteCoffe.Repository;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import lombok.RequiredArgsConstructor;
+import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
 
-@Configuration
-@RequiredArgsConstructor
-public class AuthProviderConfig {
+@Repository
+public interface AccountRepository extends JpaRepository<Cuenta, Integer> {
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    /**
+     * Busca y retorna una cuenta según el correo electrónico proporcionado.
+     *
+     * @param email correo electrónico de la cuenta a buscar.
+     * @return la cuenta asociada al correo, o null si no existe.
+     */
+    Cuenta findByEmail(String email);
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    /**
+     * Busca una cuenta que coincida con el correo y contraseña proporcionados.
+     *
+     * @param email correo electrónico registrado del usuario.
+     * @param password contraseña asociada a la cuenta.
+     * @return la cuenta que coincida con ambos valores, o null si no existe.
+     */
+    Cuenta findByEmailAndPassword(String email, String password);
 
-    @Bean
-    public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
 }
+
