@@ -14,6 +14,10 @@ import com.cursoIntegrador.lePettiteCoffe.Repository.ReviewsRepository;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * Servicio para la gestión de reseñas (Reviews).
+ * Proporciona métodos para listar todas las reseñas y guardar nuevas reseñas de invitados o usuarios registrados.
+ */
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
@@ -21,6 +25,11 @@ public class ReviewService {
     @Autowired
     private final ReviewsRepository reviewRepo;
 
+    /**
+     * Obtiene una lista de todas las reseñas existentes y las convierte a DTOs.
+     *
+     * @return Una lista de objetos ReviewDTO con la información de las reseñas.
+     */
     public List<ReviewDTO> getAllReviews() {
         List<Reviews> original = reviewRepo.findAll();
         List<ReviewDTO> dtoList = new ArrayList<>();
@@ -33,6 +42,13 @@ public class ReviewService {
         return dtoList;
     }
 
+    /**
+     * Guarda una nueva reseña realizada por un invitado (no autenticado).
+     * Establece la cuenta a nula y la verificación a falsa.
+     *
+     * @param review La entidad Reviews que contiene los datos de la reseña del invitado.
+     * @return Un objeto ReviewDTO que representa la reseña guardada.
+     */
     public ReviewDTO saveReviewGuest(Reviews review) {
         review.setCuenta(null);
         review.setVerified(false);
@@ -42,6 +58,14 @@ public class ReviewService {
         return reviewDTO;
     }
 
+    /**
+     * Guarda una nueva reseña realizada por un usuario autenticado.
+     * Asocia la reseña a la cuenta del usuario, establece el email, nombre (alias) y la marca como verificada.
+     *
+     * @param review La entidad Reviews que contiene los datos de la reseña.
+     * @param userDetails Los detalles del usuario autenticado que realiza la reseña.
+     * @return Un objeto ReviewDTO que representa la reseña guardada.
+     */
     public ReviewDTO saveReviewUser(Reviews review, CustomUserDetails userDetails) {
         Cuenta cuenta = userDetails.getCuenta();
 

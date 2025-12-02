@@ -9,8 +9,22 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 
+/**
+ * Clase de utilidad para generar archivos Excel (XLSX) a partir de una lista
+ * de objetos utilizando Apache POI.
+ */
 public class ExcelGenerator {
 
+    /**
+     * Genera un archivo Excel (XLSX) a partir de una lista de objetos.
+     * Utiliza los nombres de los campos de la clase como encabezados de columna
+     * y los valores de los campos como datos de las filas.
+     *
+     * @param <T> El tipo de objetos contenidos en la lista.
+     * @param dataList La lista de objetos a exportar.
+     * @param sheetName El nombre que se le dará a la hoja de cálculo dentro del libro.
+     * @return Un ByteArrayInputStream que contiene el archivo Excel generado.
+     */
     public static <T> ByteArrayInputStream generateExcel(List<T> dataList, String sheetName) throws IOException {
         if (dataList == null || dataList.isEmpty()) {
             throw new IllegalArgumentException("La lista de datos está vacía");
