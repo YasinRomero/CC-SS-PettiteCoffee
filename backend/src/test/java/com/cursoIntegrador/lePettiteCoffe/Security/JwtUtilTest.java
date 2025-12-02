@@ -26,11 +26,19 @@ public class JwtUtilTest {
     private JwtUtil jwtUtil;
     private static final String SECRET_KEY = "llave_De_Prueba_Momentanea_12345_ExtendedForSecurityRequirements";
 
+    /**
+     * Inicializa los recursos necesarios antes de cada prueba.
+     */
     @BeforeEach
     void setUp() {
         jwtUtil = new JwtUtil();
     }
 
+    // Tests para generateToken
+
+    /**
+     * Verifica que el token generado sea válido y tenga 3 partes.
+     */
     @Test
     void testGenerateToken_Success() {
         String token = jwtUtil.generateToken("usuario@prueba.com");
@@ -41,6 +49,9 @@ public class JwtUtilTest {
         assertEquals(3, partes.length);
     }
 
+    /**
+     * Verifica que múltiples llamadas generen tokens válidos.
+     */
     @Test
     void testGenerateToken_MultipleCalls_DifferentTokens() {
         String token1 = jwtUtil.generateToken("usuario@prueba.com");
@@ -52,6 +63,9 @@ public class JwtUtilTest {
         assertTrue(token2.contains("."));
     }
 
+    /**
+     * Verifica la generación de token usando un correo con caracteres especiales.
+     */
     @Test
     void testGenerateToken_WithSpecialCharactersEmail() {
         String emailEspecial = "usuario+tag@prueba.com";
@@ -61,6 +75,9 @@ public class JwtUtilTest {
         assertEquals(emailEspecial, jwtUtil.validateAndGetUser(token));
     }
 
+    /**
+     * Verifica la generación de token con un correo largo.
+     */
     @Test
     void testGenerateToken_WithLongEmail() {
         String emailLargo = "very.long.email.address.with.many.characters@test.example.com";
@@ -70,6 +87,11 @@ public class JwtUtilTest {
         assertEquals(emailLargo, jwtUtil.validateAndGetUser(token));
     }
 
+    // Tests para validateAndGetUser
+
+    /**
+     * Verifica que se obtenga correctamente el usuario desde un token válido.
+     */
     @Test
     void testValidateAndGetUser_Success() {
         String usuario = "usuario@prueba.com";
@@ -80,6 +102,9 @@ public class JwtUtilTest {
         assertEquals(usuario, username);
     }
 
+    /**
+     * Verifica que múltiples tokens con distintos usuarios devuelvan correctamente cada uno.
+     */
     @Test
     void testValidateAndGetUser_MultipleUsers() {
         String usuario1 = "usuario1@prueba.com";
@@ -92,11 +117,17 @@ public class JwtUtilTest {
         assertEquals(usuario2, jwtUtil.validateAndGetUser(token2));
     }
 
+    /**
+     * Verifica el comportamiento cuando se envía un token vacío.
+     */
     @Test
     void testValidateAndGetUser_EmptyToken() {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateAndGetUser(""));
     }
 
+    /**
+     * Verifica que un token alterado genere excepción.
+     */
     @Test
     void testValidateAndGetUser_TokenMutated() {
         String token = jwtUtil.generateToken("usuario@prueba.com");
@@ -105,6 +136,9 @@ public class JwtUtilTest {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateAndGetUser(mutated));
     }
 
+    /**
+     * Verifica que un token generado con otra clave secreta falle en la validación.
+     */
     @Test
     void testValidateAndGetUser_InvalidTokenWithWrongSecret() {
         SecretKey wrongKey = Keys.hmacShaKeyFor("different_secret_key_123456789_ExtendedForSecurityRequirements".getBytes(StandardCharsets.UTF_8));
@@ -113,16 +147,25 @@ public class JwtUtilTest {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateAndGetUser(invalidToken));
     }
 
+    /**
+     * Verifica que un token con formato incorrecto falle en la validación.
+     */
     @Test
     void testValidateAndGetUser_InvalidFormat_TwoParts() {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateAndGetUser("only-two-parts.here"));
     }
 
+    /**
+     * Verifica que un token con cuatro partes sea rechazado.
+     */
     @Test
     void testValidateAndGetUser_InvalidFormat_FourParts() {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateAndGetUser("a.b.c.d"));
     }
 
+    /**
+     * Verifica que un token expirado genere excepción.
+     */
     @Test
     void testValidateAndGetUser_ExpiredToken() {
         String expiredToken = Jwts.builder()
@@ -135,6 +178,11 @@ public class JwtUtilTest {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateAndGetUser(expiredToken));
     }
 
+    // Tests para validateTokenAndGetClaims
+
+    /**
+     * Verifica que los claims se obtengan correctamente desde un token válido.
+     */
     @Test
     void testValidateTokenAndGetClaims_Success() {
         String usuario = "usuario@prueba.com";
@@ -148,6 +196,9 @@ public class JwtUtilTest {
         assertNotNull(claims.getExpiration());
     }
 
+    /**
+     * Verifica el contenido esperado dentro de los claims.
+     */
     @Test
     void testValidateTokenAndGetClaims_ClaimsContent() {
         String usuario = "test@example.com";
@@ -159,6 +210,9 @@ public class JwtUtilTest {
         assertTrue(claims.getExpiration().after(claims.getIssuedAt()));
     }
 
+    /**
+     * Verifica que un token expirado no pueda obtener claims.
+     */
     @Test
     void testValidateTokenAndGetClaims_ExpiredToken() {
         String expiredToken = Jwts.builder()
@@ -171,6 +225,9 @@ public class JwtUtilTest {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateTokenAndGetClaims(expiredToken));
     }
 
+    /**
+     * Verifica que una firma inválida genere excepción al validar claims.
+     */
     @Test
     void testValidateTokenAndGetClaims_InvalidSignature() {
         SecretKey wrongKey = Keys.hmacShaKeyFor("wrong_secret_key_1234567890_ExtendedForSecurityRequirements".getBytes(StandardCharsets.UTF_8));
@@ -179,11 +236,17 @@ public class JwtUtilTest {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateTokenAndGetClaims(invalidToken));
     }
 
+    /**
+     * Verifica que no se acepten tokens vacíos en la obtención de claims.
+     */
     @Test
     void testValidateTokenAndGetClaims_EmptyToken() {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateTokenAndGetClaims(""));
     }
 
+    /**
+     * Verifica que formatos malformados de token sean rechazados.
+     */
     @Test
     void testValidateTokenAndGetClaims_MalformedToken() {
         assertThrows(RuntimeException.class, () -> jwtUtil.validateTokenAndGetClaims("malformed.token"));
