@@ -73,12 +73,12 @@ public class PurchaseControllerTest {
         CustomUserDetails user = mock(CustomUserDetails.class);
         PurchaseRequestDTO request = new PurchaseRequestDTO();
 
-        doNothing().when(purchaseService).savePurchase(user, request);
+        when(purchaseService.savePurchase(user, request)).thenReturn(request);
         ResponseEntity<?> resp = controller.newPurchase(request, user);
         assertEquals(HttpStatus.OK, resp.getStatusCode());
         verify(purchaseService).savePurchase(user, request);
 
-        doThrow(new RuntimeException("boom")).when(purchaseService).savePurchase(user, request);
+        when(purchaseService.savePurchase(user, request)).thenThrow(new RuntimeException("boom"));
         ResponseEntity<?> respErr = controller.newPurchase(request, user);
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, respErr.getStatusCode());
         verify(purchaseService, times(2)).savePurchase(user, request);
