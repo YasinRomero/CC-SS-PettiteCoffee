@@ -1,29 +1,53 @@
-package com.cursoIntegrador.lePettiteCoffe.Repository;
+package com.cursoIntegrador.lePettiteCoffe.Security;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.cursoIntegrador.lePettiteCoffe.Model.Entity.Cuenta;
+import lombok.RequiredArgsConstructor;
 
-@Repository
-public interface AccountRepository extends JpaRepository<Cuenta, Integer> {
+/**
+ * Configuración encargada de definir los proveedores de autenticación
+ * y el administrador de autenticación para el sistema de seguridad.
+ */
+@Configuration
+@RequiredArgsConstructor
+public class AuthProviderConfig {
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
-     * Busca y retorna una cuenta según el correo electrónico proporcionado.
+     * Configura y devuelve el proveedor de autenticación basado en DAO,
+     * utilizando el servicio de usuarios y el codificador de contraseñas.
      *
-     * @param email correo electrónico de la cuenta a buscar.
-     * @return la cuenta asociada al correo, o null si no existe.
+     * @return el proveedor de autenticación configurado.
      */
-    Cuenta findByEmail(String email);
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
 
     /**
-     * Busca una cuenta que coincida con el correo y contraseña proporcionados.
+     * Proporciona el administrador de autenticación a partir de la configuración existente.
      *
-     * @param email correo electrónico registrado del usuario.
-     * @param password contraseña asociada a la cuenta.
-     * @return la cuenta que coincida con ambos valores, o null si no existe.
+     * @param config la configuración de autenticación de Spring Security.
+     * @return el administrador de autenticación configurado.
+     * @throws Exception si ocurre un error obteniendo el administrador.
      */
-    Cuenta findByEmailAndPassword(String email, String password);
-
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
 }
 
