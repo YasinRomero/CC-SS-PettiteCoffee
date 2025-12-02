@@ -23,6 +23,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RestController
 @RequestMapping("/reviews")
 @RequiredArgsConstructor
+/**
+ * Controlador que expone endpoints para gestionar reseñas (reviews).
+ * <p>
+ * Permite crear reseñas como invitado o como usuario autenticado y listar reseñas.
+ */
 public class ReviewController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -31,6 +36,13 @@ public class ReviewController {
     final ReviewService reviewService;
 
     @PostMapping("/addReviewGuest")
+    /**
+     * Crea una reseña enviada por un invitado (no autenticado).
+     *
+     * @param review entidad Reviews con los datos de la reseña proporcionada por el invitado
+     * @return ResponseEntity con el ReviewDTO creado si se guarda correctamente, o
+     *         un ResponseEntity con estado 500 en caso de error
+     */
     public ResponseEntity<?> addReviewGuest(@RequestBody Reviews review) {
 
         logger.info("Intento de agregar reseña como invitado de: {}", review.getEmail());
@@ -46,8 +58,16 @@ public class ReviewController {
 
     }
 
-    @PostMapping("/addReview")
-    public ResponseEntity<?> addReview(@RequestBody Reviews review,
+        @PostMapping("/addReview")
+        /**
+         * Crea una reseña para un usuario autenticado.
+         *
+         * @param review      entidad Reviews con los datos de la reseña
+         * @param userDetails información del usuario autenticado
+         * @return ResponseEntity con el ReviewDTO creado si se guarda correctamente, o
+         *         un ResponseEntity con estado 500 en caso de error
+         */
+        public ResponseEntity<?> addReview(@RequestBody Reviews review,
             @AuthenticationPrincipal CustomUserDetails userDetails) {
 
         logger.info("Intento de agregar reseña de: {}", review.getEmail());
@@ -64,6 +84,12 @@ public class ReviewController {
     }
 
     @GetMapping("/getReviews")
+    /**
+     * Devuelve la lista completa de reseñas en el sistema.
+     *
+     * @return ResponseEntity con la lista de ReviewDTO si la operación es exitosa,
+     *         o ResponseEntity con estado 500 en caso de error
+     */
     public ResponseEntity<?> getAllReviews() {
         logger.info("Intento de solicitar lista de reviews");
 

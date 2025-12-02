@@ -21,6 +21,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Cuenta {
 
+    /**
+     * Entidad que representa una cuenta de usuario en el sistema.
+     * <p>
+     * Contiene información de autenticación y datos de perfil básicos.
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idcuenta")
@@ -60,7 +66,18 @@ public class Cuenta {
     @Column(name = "telefono", length = 12, nullable = true)
     private String telefono = "No establecido";
 
-    public Cuenta(Integer idcuenta, String email, String password, String rol, String estado,
+        /**
+         * Constructor principal para la entidad Cuenta.
+         *
+         * @param idcuenta      identificador de la cuenta (puede ser null para nuevas cuentas)
+         * @param email         correo electrónico asociado a la cuenta
+         * @param password      contraseña (normalmente cifrada)
+         * @param rol           rol del usuario (p.ej. ADMIN, USER)
+         * @param estado        estado de la cuenta (p.ej. activo, inactivo)
+         * @param fechaRegistro fecha y hora en que se registró la cuenta
+         * @param telefono      número de teléfono asociado a la cuenta
+         */
+        public Cuenta(Integer idcuenta, String email, String password, String rol, String estado,
             LocalDateTime fechaRegistro, String telefono) {
         this.idcuenta = idcuenta;
         this.email = email;

@@ -33,12 +33,26 @@ import java.util.ArrayList;
 @RequestMapping("/products")
 public class ProductController {
 
+    /**
+     * Controlador que expone endpoints para operaciones sobre productos.
+     * <p>
+     * Permite listar productos con la URL de imagen, agregar, eliminar,
+     * modificar parcialmente y generar reportes en PDF.
+     */
+
     private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
     private final ProductService productService;
 
     @GetMapping("/getAllProducts")
+    /**
+     * Devuelve todos los productos disponibles junto con la URL de su imagen.
+     *
+     * @param request HttpServletRequest usado para construir la URL base de las imágenes
+     * @return ResponseEntity con la lista de ProductDTO si la operación es exitosa,
+     *         o ResponseEntity.noContent() (204) si no hay productos
+     */
     public ResponseEntity<List<ProductDTO>> getAllProductsWithImage(HttpServletRequest request) {
 
         String baseUrl = String.format("%s://%s:%d/images/productos/", request.getScheme(), request.getServerName(),
@@ -70,6 +84,13 @@ public class ProductController {
 
     @PostMapping("/agregar")
     @PreAuthorize("hasRole('ADMIN')")
+    /**
+     * Agrega un nuevo producto al sistema. Solo accesible por administradores.
+     *
+     * @param product entidad Product con los datos del nuevo producto
+     * @return ResponseEntity con el producto creado si la operación es exitosa,
+     *         o ResponseEntity con estado 500 en caso de error
+     */
     public ResponseEntity<?> agregarProducto(@Valid @RequestBody Product product) {
         logger.info("Intento de agregar producto: {}", product.getNombre());
 
@@ -86,6 +107,13 @@ public class ProductController {
 
     @DeleteMapping("/eliminar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    /**
+     * Elimina un producto por su identificador. Solo accesible por administradores.
+     *
+     * @param id identificador del producto a eliminar
+     * @return ResponseEntity con mensaje de éxito si se elimina, estado 404 si no existe,
+     *         o estado 500 en caso de error
+     */
     public ResponseEntity<?> eliminarProducto(@PathVariable Integer id) {
         logger.info("Intento de eliminar producto con ID: {}", id);
         try {
@@ -105,6 +133,13 @@ public class ProductController {
 
     @PatchMapping("/modificar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    /**
+     * Actualiza parcialmente un producto existente.
+     *
+     * @param id              identificador del producto a modificar
+     * @param productoParcial entidad Product con los campos a actualizar
+     * @return ResponseEntity con el producto actualizado o estado 500 en caso de error
+     */
     public ResponseEntity<?> actualizarParcial(@PathVariable Integer id, @RequestBody Product productoParcial) {
         logger.info("Intento de actualización parcial de producto con ID: {}", id);
         try {
@@ -119,6 +154,11 @@ public class ProductController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getReport")
+    /**
+     * Genera y devuelve un reporte en PDF con la información de productos.
+     *
+     * @return ResponseEntity con el PDF en bytes, enviado como attachment 'reporte.pdf'
+     */
     public ResponseEntity<?> getReportProduct() throws Exception {
         byte[] pdf = productService.getReport();
 

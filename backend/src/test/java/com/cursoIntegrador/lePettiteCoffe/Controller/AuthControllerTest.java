@@ -28,6 +28,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 @ExtendWith(MockitoExtension.class)
 public class AuthControllerTest {
 
+    /**
+     * Pruebas unitarias para AuthController que cubren login, registro, logout y flujos de recuperación de contraseña.
+     */
+
     @InjectMocks
     private AuthController controller;
 
@@ -41,6 +45,9 @@ public class AuthControllerTest {
     private WelcomeService welcomeService;
 
     @Test
+    /**
+     * Verifica que el endpoint de login devuelve OK y los datos de inicio de sesión esperados cuando las credenciales son válidas.
+     */
     void testLoginSuccess() {
         LoginRequest request = new LoginRequest("user@test.com", "pass123");
 
@@ -58,6 +65,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que login devuelve UNAUTHORIZED con un mensaje de error cuando la contraseña es inválida.
+     */
     void testLoginFail_InvalidPassword() {
         LoginRequest request = new LoginRequest("user@test.com", "wrongpass");
 
@@ -72,6 +82,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que protectedTest devuelve OK e incluye el nombre de usuario autenticado.
+     */
     void testProtectedTest() {
         Authentication mockAuth = Mockito.mock(Authentication.class);
         Mockito.when(mockAuth.getName()).thenReturn("user@test.com");
@@ -86,6 +99,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que el endpoint register registra un nuevo usuario, envía correo de bienvenida y devuelve los datos de login.
+     */
     void testRegisterSuccess() {
         LoginRequest request = new LoginRequest("newuser@test.com", "pass123");
 
@@ -106,6 +122,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que register devuelve BAD_REQUEST cuando el registro falla (usuario ya existe).
+     */
     void testRegisterFail() {
         LoginRequest request = new LoginRequest("exists@test.com", "pass123");
 
@@ -119,6 +138,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que logout invalida el token y devuelve un mensaje de confirmación cuando tiene éxito.
+     */
     void testLogoutSuccess() {
         String token = "token123";
         String header = "Bearer " + token;
@@ -134,6 +156,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que logout devuelve BAD_REQUEST cuando el manejo del token falla.
+     */
     void testLogoutFail() {
         String token = "badtoken";
         String header = "Bearer " + token;
@@ -147,6 +172,11 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que enviarToken devuelve OK y envía un token de recuperación cuando el correo existe.
+     *
+     * @throws Exception si el envío del token falla durante la preparación del test
+     */
     void testEnviarToken_Success() throws Exception {
         Map<String, String> body = new HashMap<>();
         body.put("email", "exist@test.com");
@@ -161,6 +191,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que enviarToken devuelve NOT_FOUND cuando el correo no está registrado.
+     */
     void testEnviarToken_NotFound() {
         Map<String, String> body = new HashMap<>();
         body.put("email", "noexist@test.com");
@@ -174,6 +207,11 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que enviarToken devuelve INTERNAL_SERVER_ERROR cuando el envío del token falla.
+     *
+     * @throws Exception si el servicio simulado falla inesperadamente
+     */
     void testEnviarToken_InternalError() throws Exception {
         Map<String, String> body = new HashMap<>();
         body.put("email", "exist2@test.com");
@@ -189,6 +227,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que cambiarPassword devuelve UNAUTHORIZED cuando el token proporcionado es inválido.
+     */
     void testCambiarPassword_TokenInvalid() {
         PasswordChangeRequest req = new PasswordChangeRequest();
         req.setEmail("user@test.com");
@@ -205,6 +246,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que cambiarPassword actualiza la contraseña y devuelve OK cuando el token es válido.
+     */
     void testCambiarPassword_Success() {
         PasswordChangeRequest req = new PasswordChangeRequest();
         req.setEmail("user2@test.com");
@@ -224,6 +268,9 @@ public class AuthControllerTest {
     }
 
     @Test
+    /**
+     * Verifica que cambiarPassword devuelve INTERNAL_SERVER_ERROR cuando la actualización de contraseña falla.
+     */
     void testCambiarPassword_ErrorDuringUpdate() {
         PasswordChangeRequest req = new PasswordChangeRequest();
         req.setEmail("user3@test.com");

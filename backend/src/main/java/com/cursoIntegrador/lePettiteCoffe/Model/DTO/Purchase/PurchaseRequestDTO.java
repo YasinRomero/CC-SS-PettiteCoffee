@@ -8,6 +8,12 @@ import lombok.Data;
 @Data
 public class PurchaseRequestDTO {
 
+    /**
+     * DTO usado para solicitar la creación de una compra.
+     * <p>
+     * Contiene el monto procesado, la lista de productos y datos de envío.
+     */
+
     private BigDecimal montoProcesado;
     private List<PurchaseProductDTO> productos;
     private String cityDelivery;

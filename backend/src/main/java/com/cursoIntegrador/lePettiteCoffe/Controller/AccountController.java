@@ -33,6 +33,12 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/accounts")
 @RequiredArgsConstructor
+/**
+ * Controlador que expone endpoints para operaciones sobre cuentas de usuario.
+ * <p>
+ * Proporciona funcionalidades de exportación, listado, actualización de perfil,
+ * generación de reportes y cambio de roles sobre las cuentas.
+ */
 public class AccountController {
 
     @Autowired
@@ -40,6 +46,12 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/export")
+    /**
+     * Exporta todas las cuentas en formato Excel y devuelve un recurso descargable.
+     *
+     * @return ResponseEntity con un InputStreamResource que contiene el archivo Excel
+     *         listo para descargar (content-disposition: attachment; filename=cuentas.xlsx).
+     */
     public ResponseEntity<?> exportarExcel() throws IOException {
 
         ByteArrayInputStream excelStream = accountService.exportarExcel();
@@ -56,6 +68,12 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
+    /**
+     * Obtiene el listado de cuentas de usuario.
+     *
+     * @return ResponseEntity con la lista de AccountListDTO cuando existen cuentas
+     *         o ResponseEntity.noContent() (204) si la lista está vacía.
+     */
     public ResponseEntity<?> listarUsuarios() {
 
         List<AccountListDTO> cuentas = accountService.listarUsuarios();
@@ -68,7 +86,15 @@ public class AccountController {
     }
 
     @PatchMapping("/update-profile")
-    public ResponseEntity<?> actualizarPerfil(@AuthenticationPrincipal CustomUserDetails userDetails,
+        /**
+         * Actualiza el perfil de la cuenta asociada al usuario autenticado.
+         *
+         * @param userDetails información del usuario autenticado obtenida del contexto de seguridad
+         * @param dto         DTO con los campos para actualizar en la cuenta
+         * @return ResponseEntity con mensaje de éxito si la actualización fue correcta,
+         *         o ResponseEntity con estado 401 si el usuario no está autenticado.
+         */
+        public ResponseEntity<?> actualizarPerfil(@AuthenticationPrincipal CustomUserDetails userDetails,
             @Valid @RequestBody AccountUpdateDTO dto) {
 
         if (userDetails == null) {
@@ -81,6 +107,12 @@ public class AccountController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getReport")
+    /**
+     * Genera y devuelve un reporte en PDF sobre las cuentas.
+     *
+     * @return ResponseEntity con un arreglo de bytes que representa el PDF
+     *         y se envía como attachment con el nombre 'reporte.pdf'.
+     */
     public ResponseEntity<?> getReportProduct() throws Exception {
         byte[] pdf = accountService.getReport();
 
@@ -92,6 +124,14 @@ public class AccountController {
 
     @PatchMapping("/changeRole")
     @PreAuthorize("hasRole('ADMIN')")
+    /**
+     * Cambia el rol de una cuenta según los parámetros proporcionados.
+     *
+     * @param changeRoleRequestDTO DTO que contiene la información necesaria para
+     *                             cambiar el rol de la cuenta objetivo
+     * @return ResponseEntity con el DTO actualizado en caso de éxito; en caso de
+     *         error devuelve un ResponseEntity con estado 500 y un mensaje de error.
+     */
     public ResponseEntity<?> actualizarParcial(@RequestBody ChangeRoleRequestDTO changeRoleRequestDTO) {
         try {
             ChangeRoleRequestDTO actualizado = accountService.cambiarRol(changeRoleRequestDTO);

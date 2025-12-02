@@ -28,12 +28,23 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/sucursales")
 public class BranchController {
 
+    /**
+     * Controlador para gestionar sucursales.
+     * <p>
+     * Permite listar, agregar, modificar y eliminar sucursales, además de generar reportes.
+     */
+
     @Autowired
     private final BranchService branchService;
 
     private static final Logger logger = LoggerFactory.getLogger(BranchController.class);
 
     @GetMapping("/listar")
+    /**
+     * Lista todas las sucursales disponibles.
+     *
+     * @return ResponseEntity con la lista de sucursales o 500 en caso de error
+     */
     public ResponseEntity<List<Branch>> listarSucursales() {
         logger.info("Intento de solicitar lista de sucursales");
         try {
@@ -48,6 +59,12 @@ public class BranchController {
 
     @PostMapping("/agregar")
     @PreAuthorize("hasRole('ADMIN')")
+    /**
+     * Agrega una nueva sucursal al sistema (solo ADMIN).
+     *
+     * @param branch entidad Branch con los datos de la sucursal a crear
+     * @return ResponseEntity con la sucursal creada o 500 en caso de error
+     */
     public ResponseEntity<?> agregarSucursal(@RequestBody Branch branch) {
         logger.info("Intento de agregar sucursal: {}", branch.getNombre());
 
@@ -63,6 +80,13 @@ public class BranchController {
 
     @PatchMapping("/modificar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    /**
+     * Modifica parcialmente una sucursal existente.
+     *
+     * @param id               identificador de la sucursal a modificar
+     * @param branchActualizada entidad Branch con los campos a actualizar
+     * @return ResponseEntity con la sucursal modificada, 404 si no existe, o 500 en caso de error
+     */
     public ResponseEntity<?> modificarSucursal(
             @PathVariable Integer id,
             @RequestBody Branch branchActualizada) {
@@ -85,6 +109,12 @@ public class BranchController {
 
     @DeleteMapping("/eliminar/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    /**
+     * Elimina una sucursal por su identificador (solo ADMIN).
+     *
+     * @param id identificador de la sucursal a eliminar
+     * @return ResponseEntity con mensaje de éxito, 404 si no existe, o 500 en caso de error
+     */
     public ResponseEntity<?> eliminarSucursal(@PathVariable Integer id) {
 
         logger.info("Intento de eliminar sucursal con ID: {}", id);
@@ -105,6 +135,11 @@ public class BranchController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/getReport")
+    /**
+     * Genera y devuelve un reporte en PDF con información de sucursales.
+     *
+     * @return ResponseEntity con el PDF en bytes, enviado como attachment 'reporte.pdf'
+     */
     public ResponseEntity<?> getReportProduct() throws Exception {
         byte[] pdf = branchService.getReport();
 

@@ -19,6 +19,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class PurchaseDetails {
 
+    /**
+     * Entidad que representa una línea de detalle dentro de una compra.
+     * <p>
+     * Contiene referencia al producto, cantidad e instrucciones específicas.
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

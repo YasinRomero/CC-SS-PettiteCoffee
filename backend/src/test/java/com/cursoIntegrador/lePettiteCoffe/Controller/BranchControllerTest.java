@@ -25,6 +25,10 @@ import com.cursoIntegrador.lePettiteCoffe.Service.DAO.BranchService;
 @ExtendWith(MockitoExtension.class)
 public class BranchControllerTest {
 
+        /**
+         * Pruebas unitarias para BranchController que cubren listar, crear, actualizar y eliminar sucursales.
+         */
+
         @Mock
         private BranchService branchService;
 
@@ -42,6 +46,9 @@ public class BranchControllerTest {
         }
 
         @Test
+        /**
+         * Verifica que listarSucursales devuelve OK con la lista de sucursales cuando el servicio tiene éxito.
+         */
         void testListarSucursales_Success() {
                 Branch sucursal2 = new Branch();
                 sucursal2.setIdsucursal(2);
@@ -60,6 +67,9 @@ public class BranchControllerTest {
         }
 
         @Test
+        /**
+         * Verifica que listarSucursales devuelve INTERNAL_SERVER_ERROR cuando el servicio lanza una excepción inesperada.
+         */
         void testListarSucursales_ErrorInesperado() {
                 when(branchService.listarSucursales()).thenThrow(new RuntimeException("Error de base de datos"));
 
@@ -69,6 +79,9 @@ public class BranchControllerTest {
         }
 
         @Test
+        /**
+         * Verifica que agregarSucursal devuelve OK y la sucursal creada que retorna el servicio.
+         */
         void testAgregarSucursal_ConPermisos_Success() {
                 when(branchService.guardarSucursal(any(Branch.class))).thenReturn(sucursalEjemplo);
 
@@ -80,6 +93,9 @@ public class BranchControllerTest {
         }
 
         @Test
+        /**
+         * Verifica que modificarSucursal devuelve OK y llama al servicio para modificar la sucursal parcialmente.
+         */
         void testModificarSucursal_Success() {
                 Branch sucursalActualizada = new Branch();
                 sucursalActualizada.setNombre("Sucursal Centro Actualizada");
@@ -93,6 +109,9 @@ public class BranchControllerTest {
         }
 
         @Test
+        /**
+         * Verifica que modificarSucursal devuelve NOT_FOUND cuando el servicio lanza IllegalArgumentException por sucursal no encontrada.
+         */
         void testModificarSucursal_NoEncontrada() {
                 when(branchService.modificarSucursalParcial(eq(999), any(Branch.class)))
                                 .thenThrow(new IllegalArgumentException("Sucursal con ID 999 no encontrada"));
@@ -104,6 +123,9 @@ public class BranchControllerTest {
         }
 
         @Test
+        /**
+         * Verifica que eliminarSucursal devuelve OK y el mensaje correcto cuando la eliminación tiene éxito.
+         */
         void testEliminarSucursal_Success() {
                 Mockito.doNothing().when(branchService).eliminarSucursal(1);
 
@@ -115,6 +137,9 @@ public class BranchControllerTest {
         }
 
         @Test
+        /**
+         * Verifica que eliminarSucursal devuelve NOT_FOUND cuando el servicio lanza IllegalArgumentException.
+         */
         void testEliminarSucursal_NoEncontrada() {
                 Mockito.doThrow(new IllegalArgumentException("La sucursal con ID 999 no existe"))
                                 .when(branchService).eliminarSucursal(999);

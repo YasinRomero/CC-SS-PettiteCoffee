@@ -28,6 +28,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/auth")
 public class AuthController {
 
+    /**
+     * Controlador de autenticación y gestión de cuentas de usuario.
+     * <p>
+     * Integra login, registro, logout, recuperación y cambio de contraseña.
+     */
+
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @Autowired
@@ -40,6 +46,13 @@ public class AuthController {
     private WelcomeService welcomeService;
 
     @PostMapping("/login")
+    /**
+     * Realiza la autenticación de un usuario con credenciales.
+     *
+     * @param loginRequest DTO con username (email) y password
+     * @return ResponseEntity con los datos de sesión / token al autenticarse correctamente,
+     *         o 401 si las credenciales son inválidas
+     */
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
 
         String email = loginRequest.getUsername();
@@ -56,12 +69,24 @@ public class AuthController {
 
     @GetMapping("/protectedTest")
     @PreAuthorize("isAuthenticated()")
+    /**
+     * Endpoint de prueba protegido para usuarios autenticados.
+     *
+     * @return ResponseEntity con un mensaje que incluye el nombre del usuario autenticado
+     */
     public ResponseEntity<?> protectedTest() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         return ResponseEntity.ok("USUARIO : " + username + " ENTRO AL ENDPOINT PROTEGIDO");
     }
 
     @PostMapping("/register")
+    /**
+     * Registra una nueva cuenta y retorna los datos de sesión.
+     *
+     * @param loginRequest DTO con username (email) y password para registrar la cuenta
+     * @return ResponseEntity con los datos de sesión al registrar correctamente,
+     *         o 400 si el registro falla
+     */
     public ResponseEntity<?> register(@RequestBody LoginRequest loginRequest) {
 
         String email = loginRequest.getUsername();
@@ -80,6 +105,12 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
+    /**
+     * Invalida el token de autenticación enviado en la cabecera Authorization.
+     *
+     * @param authHeader cabecera Authorization que contiene el token Bearer
+     * @return ResponseEntity con mensaje de confirmación o estado 400 en caso de error
+     */
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
         try {
             String token = authHeader.replace("Bearer ", "");
@@ -94,6 +125,12 @@ public class AuthController {
     }
 
     @PostMapping("/recuperar")
+    /**
+     * Genera y envía un token de recuperación de contraseña al correo proporcionado.
+     *
+     * @param body Mapa que debe contener la clave "email" con la dirección de correo
+     * @return ResponseEntity con mensaje de éxito si se envía el token o estados 404/500 según el caso
+     */
     public ResponseEntity<String> enviarToken(@RequestBody Map<String, String> body) {
         String email = body.get("email");
         logger.info("Solicitud de recuperación de contraseña para: {}", email);
@@ -115,6 +152,12 @@ public class AuthController {
     }
 
     @PostMapping("/cambiar-password")
+    /**
+     * Cambia la contraseña de una cuenta usando un token válido de recuperación.
+     *
+     * @param request DTO PasswordChangeRequest con email, token y nueva password
+     * @return ResponseEntity con un mapa indicando si el cambio fue válido y un mensaje descriptivo
+     */
     public ResponseEntity<Map<String, Object>> cambiarPassword(@RequestBody PasswordChangeRequest request) {
 
         String email = request.getEmail();

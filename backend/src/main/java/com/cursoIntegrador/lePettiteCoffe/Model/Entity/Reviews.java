@@ -17,6 +17,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Reviews {
 
+    /**
+     * Entidad que representa una reseña (review) de producto o servicio.
+     * <p>
+     * Incluye nombre, email, cuerpo de la reseña, puntuación y referencia a la cuenta opcional.
+     */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idreview")
@@ -42,6 +48,14 @@ public class Reviews {
     private boolean verified;
 
     public Reviews(String nombre, String email, String cuerpo, Integer puntuacion) {
+        /**
+         * Crea una instancia de Reviews con los campos obligatorios.
+         *
+         * @param nombre     nombre del autor de la reseña
+         * @param email      correo del autor
+         * @param cuerpo     texto de la reseña
+         * @param puntuacion puntuación numérica otorgada
+         */
         this.nombre = nombre;
         this.email = email;
         this.cuerpo = cuerpo;
